@@ -1,31 +1,37 @@
 import streamlit as st
-import pandas as pd
-import numpy as np
-from yahooquery import Ticker
+import yfinance as yf
 import plotly.graph_objects as go
 
-st.set_page_config(page_title="Stock Analysis App", layout="wide")
-st.title("📈 Stock Analysis Dashboard")
+st.set_page_config(page_title="Simple Stock App")
 
-# User input
-ticker_input = st.text_input("Enter Stock Ticker (e.g., AAPL, TSLA, MSFT):", "AAPL")
+st.title("📈 Simple Stock Analysis")
 
-if ticker_input:
+ticker = st.text_input("Enter Stock Ticker:", "AAPL")
 
-    stock = Ticker(ticker_input)
+if ticker:
+    stock = yf.Ticker(ticker)
 
-    # Company info
-    info = stock.asset_profile[ticker_input]
+    # Current price
+    info = stock.info
+    price = info.get("currentPrice", "N/A")
 
-    st.subheader("Company Overview")
-    col1, col2 = st.columns(2)
+    st.subheader(f"Current Price: {price}")
 
-    with col1:
-        st.write("**Company Name:**", info.get("longBusinessSummary", "N/A")[:100] + "...")
-        st.write("**Sector:**", info.get("sector", "N/A"))
-        st.write("**Industry:**", info.get("industry", "N/A"))
+    # Historical data
+    hist = stock.history(period="1y")
 
-    with col2:
-        quote = stock.quote_type[ticker_input]
-        st.write("**Current Price:**", quote.get("regularMarketPrice", "N/A"))
-        st.write("**Market Cap:**", q
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=hist.index,
+        y=hist["Close"],
+        mode="lines",
+        name="Close Price"
+    ))
+
+    fig.update_layout(
+        title=f"{ticker} - Last 1 Year",
+        xaxis_title="Date",
+        yaxis_title="Price"
+    )
+
+    st.plotly_chart(fig, use_container_width=True)
