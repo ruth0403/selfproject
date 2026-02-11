@@ -3,6 +3,10 @@ import yfinance as yf
 import pandas as pd
 import plotly.graph_objects as go
 
+import yfinance as yf
+print(yf.__version__)
+
+
 st.set_page_config(page_title="Stock Analysis App", layout="wide")
 
 st.title("📈 Stock Analysis Dashboard")
