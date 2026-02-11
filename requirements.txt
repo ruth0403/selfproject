@@ -1,5 +1,5 @@
-streamlit==1.31.1
-yahooquery==2.6.4
-pandas==2.1.4
-plotly==5.18.0
-numpy==1.26.3
+streamlit
+yahooquery
+pandas
+plotly
+numpy
